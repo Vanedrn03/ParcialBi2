@@ -1,0 +1,68 @@
+table Fotos_Vehiculos
+	lineageTag: 12a3ba5b-d1d4-41bc-a22b-1a079493b67f
+
+	measure 'Margen Total' = ```
+			[Total Ingresos] - [Costo Total]
+			
+			```
+		lineageTag: e8ca41f2-4ab4-4711-9095-dd7f82df1e05
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Id
+		dataType: int64
+		formatString: 0
+		lineageTag: eb1a63d2-f69f-4929-9562-a068d798ca38
+		summarizeBy: count
+		sourceColumn: Id
+
+		annotation SummarizationSetBy = Automatic
+
+	column Modelo
+		dataType: string
+		lineageTag: 636a6472-46eb-407f-b50b-5dcfce5b9a9c
+		summarizeBy: none
+		sourceColumn: Modelo
+
+		annotation SummarizationSetBy = Automatic
+
+	column Version
+		dataType: string
+		lineageTag: 22a1ff88-b322-4509-a852-ac0b11e9c181
+		summarizeBy: none
+		sourceColumn: Version
+
+		annotation SummarizationSetBy = Automatic
+
+	column Precio
+		dataType: double
+		lineageTag: 1d4c61d7-6e3f-4a84-8b88-e8603e68f8b2
+		summarizeBy: sum
+		sourceColumn: Precio
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Imagen
+		dataType: string
+		lineageTag: 1551ea75-94aa-493c-911e-dc997702320b
+		summarizeBy: none
+		sourceColumn: Imagen
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Fotos_Vehiculos = m
+		mode: import
+		source =
+				let
+				    Origen = Excel.Workbook(File.Contents("C:\Users\vaned\Downloads\VentasVehiculos.xlsx"), null, true),
+				    Fotos_Vehiculos_Table = Origen{[Item="Fotos_Vehiculos",Kind="Table"]}[Data],
+				    #"Tipo cambiado" = Table.TransformColumnTypes(Fotos_Vehiculos_Table,{{"Id", Int64.Type}, {"Modelo", type text}, {"Version", type text}, {"Precio", type number}, {"Imagen", type text}})
+				in
+				    #"Tipo cambiado"
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Table
+
